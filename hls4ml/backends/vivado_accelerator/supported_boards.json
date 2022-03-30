@@ -10,5 +10,11 @@
     "tcl_scripts": { "axi_stream": "axi_stream_design.tcl"},
     "python_drivers": {"axi_stream":  "axi_stream_driver.py"},
     "c_drivers": {}
+  },
+  "zcu104": {
+    "part": "xczu7ev-ffvc1156-2-e",
+    "tcl_scripts": { "axi_stream": "axi_stream_design.tcl"},
+    "python_drivers": {"axi_stream":  "axi_stream_driver.py"},
+    "c_drivers": {}
   }
 }
