@@ -6,13 +6,8 @@ create_project project_1 ${myproject}_vivado_accelerator -part xczu7ev-ffvc1156-
 
 set_property board_part xilinx.com:zcu104:part0:1.1 [current_project]
 set_property  ip_repo_paths  ${myproject}_prj [current_project]
-set_property IOSTANDARD LVCMOS33 [get_ports {LED[0]}]
-set_property IOSTANDARD LVCMOS33 [get_ports {LED[1]}]
-set_property PACKAGE_PIN D5 [get_ports {LED[1]}]
-set_property PACKAGE_PIN G8 [get_ports {LED[0]}]
-update_ip_catalog
 
-add_files -fileset constrs_1 ./top_full.xdc
+update_ip_catalog
 
 create_bd_design "design_1"
 set_property  ip_repo_paths ${myproject}_prj/solution1/impl/ip [current_project]
@@ -59,13 +54,18 @@ apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {Auto} Cl
 apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {Auto} Clk_slave {/zynq_ultra_ps_e_0/pl_clk0 (99 MHz)} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (99 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} Slave {/axi_dma_0/S_AXI_LITE} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM1_FPD]
 endgroup
 
-startgroup
-create_bd_cell -type ip -vlnv xilinx.com:hls:${myproject}_axi:1.0 ${myproject}_axi_0
-endgroup
-connect_bd_intf_net [get_bd_intf_pins axi_dma_0/M_AXIS_MM2S] [get_bd_intf_pins ${myproject}_axi_0/in_r]
-connect_bd_intf_net [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM] [get_bd_intf_pins ${myproject}_axi_0/out_r]
+#startgroup
+#create_bd_cell -type ip -vlnv xilinx.com:hls:${myproject}_axi:1.0 ${myproject}_axi_0
+#endgroup
+connect_bd_intf_net [get_bd_intf_pins axi_dma_0/M_AXIS_MM2S] [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM]
+# connect_bd_intf_net [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM] [get_bd_intf_pins ${myproject}_axi_0/out_r]
 
 create_bd_port -dir O -from 1 -to 0 LED
+
+set_property IOSTANDARD LVCMOS33 [get_ports {LED[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {LED[1]}]
+set_property PACKAGE_PIN D5 [get_ports {LED[1]}]
+set_property PACKAGE_PIN G8 [get_ports {LED[0]}]
 
 #Connect LED
 connect_bd_net -net zynq_ultra_ps_e_0_emio_gpio_o [get_bd_pins xlslice_0/Din] [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o]
